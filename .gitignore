@@ -1,0 +1,11 @@
+.env
+.env.local
+apikeyconfig.json
+apikeyconfig.local.json
+node_modules/
+log/
+logs/
+memory/
+*.log
+*.gz
+#__tests__
