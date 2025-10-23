@@ -1,3 +1,4 @@
+// 新增/退出公會時的自動化流程：條款頻道建立與日誌記錄。
 async function createTermsChannel(guild, privacyEmbed, buttonRow) {
   const channel = await guild.channels.create({
     name: '感謝您選擇使用吐司機器人---𝗧𝗦𝗕𝗢𝗧',
@@ -37,4 +38,3 @@ function registerGuildEvents(client, options) {
 }
 
 module.exports = registerGuildEvents;
-

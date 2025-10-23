@@ -1,3 +1,4 @@
+// 讀取 .env 與 apikeyconfig.local.json，統一輸出給全專案使用。
 const fs = require('fs');
 const path = require('path');
 const dotenv = require('dotenv');

@@ -31,6 +31,7 @@ class BotApp {
       throw new Error('缺少 TOKEN，請於 .env 或 apikeyconfig.local.json 設定 BOT 憑證');
     }
 
+    // 預先計算會反覆用到的路徑與客製工具，避免每次啟動都重複初始化。
     this.rootDir = path.resolve(__dirname, '..', '..');
     this.client = createClient();
     this.client.commands = new Collection();
@@ -39,12 +40,14 @@ class BotApp {
   }
 
   async bootstrap() {
+    // 確保 hot-reload 場景下不會殘留舊的 require 快取。
     reloadAllModules();
 
     statusCommand.initRedis({ maxRetries: 10, connectTimeout: 7000 });
 
     const { slashPayload } = registerCommands(this.client, { rootDir: this.rootDir });
 
+    // 互動處理器需於註冊指令後掛載，才能回應所有按鈕 / 選單。
     registerInteractionHandlers(this.client);
 
     const { incrementUploadCounter } = registerSystemMonitors(this.client, {});

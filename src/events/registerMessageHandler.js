@@ -1,3 +1,4 @@
+// 負責所有文字訊息的判斷邏輯：黑名單、關鍵字觸發、附件摘要與 AI 對話。
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
@@ -241,6 +242,7 @@ function summarizeImage(attachment) {
 }
 
 async function handleAttachments(message, incrementUploadCounter) {
+  // 此流程只做「安全摘要」，避免阻塞主要訊息處理或誤觸外部 API。
   if (recentAttachmentMessages.has(message.id)) return;
   recentAttachmentMessages.add(message.id);
 
@@ -368,4 +370,3 @@ function registerMessageHandler(client, options) {
 }
 
 module.exports = registerMessageHandler;
-

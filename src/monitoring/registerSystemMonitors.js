@@ -1,3 +1,4 @@
+// 集中註冊所有健康檢查：內存、CPU、事件迴圈、shard、socket 等。
 const fs = require('fs');
 const os = require('os');
 const https = require('https');
@@ -5,6 +6,7 @@ const net = require('net');
 const asyncHooks = require('async_hooks');
 const { performance } = require('perf_hooks');
 
+// 回傳的 incrementUploadCounter 供附件處理計數使用。
 function registerSystemMonitors(client, options = {}) {
   const {
     certificateHost = 'tsbot.dpdns.org'
@@ -221,4 +223,3 @@ function registerSystemMonitors(client, options = {}) {
 }
 
 module.exports = registerSystemMonitors;
-

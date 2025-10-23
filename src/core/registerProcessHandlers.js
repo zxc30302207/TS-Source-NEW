@@ -1,3 +1,4 @@
+// 將 Node.js 與 Discord 生命週期事件集中管理，方便日誌追蹤。
 function registerProcessHandlers(client, options) {
   const {
     getSafeErrorMessage,
@@ -40,4 +41,3 @@ function registerProcessHandlers(client, options) {
 }
 
 module.exports = registerProcessHandlers;
-

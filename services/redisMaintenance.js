@@ -1,3 +1,4 @@
+// 透過排程清除 Redis 暫存，避免長期累積影響效能。
 function scheduleRedisCleanup(redisCache, options = {}) {
   const {
     delay = 5000,

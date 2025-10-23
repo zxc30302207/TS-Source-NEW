@@ -1,3 +1,4 @@
+// 將錯誤物件轉換為乾淨字串，避免訊息過長或含不可序列化內容。
 function formatError(err) {
   if (!err) return '未知錯誤';
   return {

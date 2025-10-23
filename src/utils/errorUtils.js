@@ -1,6 +1,8 @@
+// 提供錯誤訊息本地化與安全格式化，避免在 Discord 顯示敏感資訊。
 const fs = require('fs');
 const path = require('path');
 
+// localization.json 由營運維護，缺失時將退回空物件。
 function loadLocalizationData(localizationPath = path.resolve(process.cwd(), 'localization.json')) {
   if (!fs.existsSync(localizationPath)) {
     return {};
@@ -56,6 +58,7 @@ function localizeErrorInternal(message, localizationData) {
   return `（未翻譯）${message}`;
 }
 
+// createErrorFormatter 會根據不同錯誤型態組出可讀訊息。
 function createErrorFormatter({ localizationData, extraPermissionMessages }) {
   return function getSafeErrorMessage(err, context = {}) {
     try {
@@ -122,4 +125,3 @@ module.exports = {
   loadLocalizationData,
   buildExtraPermissionMessages
 };
-

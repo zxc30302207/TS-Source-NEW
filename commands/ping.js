@@ -1,3 +1,4 @@
+// 進階網路偵測指令：整合系統 ping、Globalping、SiteRelic 與 TCP fallback。
 // commands/資訊系統-查ip.js
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { spawn } = require('child_process');
@@ -11,6 +12,7 @@ const checkBlacklist = require('../utils/checkBlacklist');
 const TIMEOUT_MS = 5000;   // 單次 timeout
 const MAX_COUNT = 10;      // 最大測試次數限制
 const COOLDOWN_MS = 5000;  // ✅ 每人冷卻時間 5 秒
+// 將結果寫入 logs/ip_ping.log 讓營運人員追蹤。
 const LOG_PATH = path.resolve(__dirname, '../logs');
 if (!fs.existsSync(LOG_PATH)) fs.mkdirSync(LOG_PATH, { recursive: true });
 
@@ -49,6 +51,7 @@ function parsePingOutput(stdout) {
 }
 
 // ---------- system ping ----------
+// 優先呼叫作業系統內建 ping，避免外部服務不穩定。
 function tryPingCommand(host, count = 1, timeout = TIMEOUT_MS) {
   return new Promise((resolve) => {
     const isWin = process.platform === 'win32';
@@ -83,6 +86,7 @@ function tryPingCommand(host, count = 1, timeout = TIMEOUT_MS) {
 }
 
 // ---------- TCP fallback ----------
+// 若系統 ping 失敗，再透過 TCP 連線估算延遲，兼顧雙重驗證。
 async function tcpMultiPing(host, ports = [443, 80], count = 1, timeout = TIMEOUT_MS) {
   const results = [];
   for (let i = 0; i < count; i++) {
@@ -144,6 +148,7 @@ async function siterelicPingUnauth(host) {
 }
 
 // ---------- 綜合探測邏輯 ----------
+// 統整多個偵測來源，依序回傳第一個成功的結果。
 async function probeHost(host, options = {}) {
   const { count = 1, ports = [443,80], preferApis = true } = options;
   let resolved = null;

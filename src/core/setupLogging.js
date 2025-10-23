@@ -1,3 +1,4 @@
+// 建立集中化日誌系統：負責輪替、壓縮與 console 攔截。
 const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
@@ -44,6 +45,7 @@ function safeStringify(value) {
   }
 }
 
+// 若前一次啟動留下舊日誌，這裡會將它壓縮並重新建立 latest.log。
 function rotateLog(latestLog) {
   if (!fs.existsSync(latestLog)) {
     fs.writeFileSync(latestLog, '');
@@ -86,6 +88,7 @@ function rotateLog(latestLog) {
   fs.writeFileSync(latestLog, '');
 }
 
+// 將 console.* 重新導向到檔案，同時保留原生輸出，供 CLI 顯示使用。
 function setupLogging(options = {}) {
   const {
     rootDir = process.cwd(),
@@ -136,4 +139,3 @@ function setupLogging(options = {}) {
 }
 
 module.exports = setupLogging;
-

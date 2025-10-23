@@ -1,3 +1,4 @@
+// 管理 AI 對話記憶、OpenAI 請求與離線fallback邏輯。
 const fs = require('fs');
 const path = require('path');
 const { OpenAI } = require('openai');
@@ -44,6 +45,7 @@ function safeWriteJSON(filePath, data) {
   }
 }
 
+// 將使用者歷史訊息緩存在記憶體，減少頻繁檔案存取。
 function loadUserMemory(userId) {
   if (userMemoryCache.has(userId)) {
     return userMemoryCache.get(userId);
@@ -60,6 +62,7 @@ function persistUserMemory(userId) {
   safeWriteJSON(filePath, data);
 }
 
+// 家庭共享記憶提供全域背景設定。
 function getFamilyMemory() {
   if (familyMemoryCache) return familyMemoryCache;
   familyMemoryCache = safeReadJSON(FAMILY_MEMORY_FILE, []);
@@ -90,6 +93,7 @@ async function addFamilyMemory(content) {
   persistFamilyMemory();
 }
 
+// 延遲建立 OpenAI client，沒有金鑰時維持離線模式。
 function getOpenAIClient() {
   if (openAIClient !== undefined) return openAIClient;
 
@@ -103,6 +107,7 @@ function getOpenAIClient() {
   return openAIClient;
 }
 
+// 組合系統／使用者近期訊息，提供模型必要的上下文。
 function buildContextMessages(userId) {
   const context = [];
   const userMemories = loadUserMemory(userId).slice(-MAX_CONTEXT_MESSAGES);
@@ -125,6 +130,7 @@ function buildContextMessages(userId) {
   return context;
 }
 
+// 失去雲端服務時提供可理解的備援回覆。
 function formatFallbackResponse(content, userId) {
   const recent = loadUserMemory(userId).slice(-3).map((entry) => `• ${entry.content}`).join('\n');
   const memorySection = recent ? `\n\n你之前提過：\n${recent}` : '';
@@ -137,6 +143,7 @@ function formatError(error) {
   return `# 😴 我睡著了，這是錯誤細節：\n\`\`\`bash\n${status ? `[${status}] ` : ''}${message}\n\`\`\``;
 }
 
+// 核心進入點：整理上下文、呼叫模型並回寫記憶。
 async function handleAIMessage(userId, content) {
   if (!content) return '我沒有收到內容，能再說一次嗎？';
 

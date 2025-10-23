@@ -1,3 +1,4 @@
+// 管理者專用文字指令：reload/guild 列表/黑名單等工具都集中在這裡。
 // textcommands/cmd.js
 const { exec } = require('child_process');
 const { EmbedBuilder, REST, Routes } = require('discord.js');
@@ -58,6 +59,7 @@ module.exports = {
     }
       
     // ============ $cmd blacklist <userid> ============
+    // ban/unban 僅修改本地 blacklist.json，不直接操作 Discord API。
     if (sub === 'ban') {
   const userId = args[0];
   const blacklistFile = path.join(__dirname, '../memory/blacklist.json');

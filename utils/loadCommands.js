@@ -1,3 +1,4 @@
+// 動態載入 text/slash 指令，重新啟動時能熱替換最新模組。
 const fs = require('fs');
 const path = require('path');
 

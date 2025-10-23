@@ -1,3 +1,4 @@
+// 定期輪替 Bot 狀態／名稱／橫幅，確保品牌一致並顯示即時資訊。
 const fs = require('fs');
 const path = require('path');
 

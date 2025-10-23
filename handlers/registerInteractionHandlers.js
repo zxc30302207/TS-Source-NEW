@@ -1,3 +1,4 @@
+// 集中處理 Slash/Modal/Button 等互動事件，避免在主程式重複綁定。
 const {
   Events,
   MessageFlags,
